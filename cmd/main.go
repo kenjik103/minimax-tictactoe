@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -158,7 +159,8 @@ func gameplayLoop() {
 		fmt.Println("Enter a position (1-9)")
 		fmt.Scanln(&position)
 
-		if !strings.Contains(boardArray, position) {
+		i, e := strconv.Atoi(position)
+		if e != nil || i < 0 || i > 9 || !strings.Contains(boardArray, position) {
 			fmt.Println("Invalid Input")
 			continue
 		}
