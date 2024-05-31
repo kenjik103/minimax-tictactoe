@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math"
-	"strconv"
 	"strings"
 )
 
@@ -20,6 +19,7 @@ func generateBoard(boardArray string) {
 	fmt.Println(sb.String())
 }
 
+// returns bool (is there a winner or not) and string (who won: player or bot)
 func checkWin(boardArray string) (bool, string) {
 	for i := 0; i < 9; i += 3 {
 		var row string = boardArray[i : i+3]
@@ -52,6 +52,7 @@ func checkWin(boardArray string) (bool, string) {
 
 }
 
+// extention of checkWin func; returns true if board is full or there is a winner
 func checkGameOver(boardArray string) bool {
 	var isWinner, _ = checkWin(boardArray)
 	if isWinner {
@@ -65,6 +66,13 @@ func checkGameOver(boardArray string) bool {
 	return true
 }
 
+/*
+* used for static evaluation in minimax algorithm.
+Returns number empty spaces in a board. Useful because the more empty
+squares, the better/worse of a loss/win it was. Allows AI make moves that win
+ASAP, or lose in the most amount of moves possible if passed a rigged board.
+*
+*/
 func getUtility(boardArray string) int {
 	utility := 1
 	for _, c := range boardArray {
@@ -119,6 +127,7 @@ func minimax(boardArray string, depth int, maximizingPlayer bool) int {
 	return 0
 }
 
+// calculates best move using minimax algorithm, passes that position out as a string
 func botMove(boardArray string) string {
 	var positions strings.Builder
 	for _, c := range boardArray {
@@ -149,8 +158,7 @@ func gameplayLoop() {
 		fmt.Println("Enter a position (1-9)")
 		fmt.Scanln(&position)
 
-		i, e := strconv.Atoi(position)
-		if e != nil || i < 0 || i > 9 {
+		if !strings.Contains(boardArray, position) {
 			fmt.Println("Invalid Input")
 			continue
 		}
